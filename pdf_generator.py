@@ -21,9 +21,16 @@ class PDF(FPDF):
         self.multi_cell(0, 10, body)
         self.ln()
 
-def gerar_pdf(categoria_principal, descricao_categoria, solucao_proposta, df_categoria_principal):
+    def draw_image(self, imagePath):
+        self.image(imagePath, w=float(0.264583 * 595))
+        self.ln()
+
+def gerar_pdf(categoria_principal, solucao_proposta, df_categoria_principal, temp_img_path):
     pdf = PDF()
     pdf.add_page()
+
+    # Imagem de resultado
+    pdf.draw_image(temp_img_path)
 
     # Título
     pdf.chapter_title('Análise de Bugs')
@@ -38,9 +45,6 @@ def gerar_pdf(categoria_principal, descricao_categoria, solucao_proposta, df_cat
     # IDs dos Bugs
     ids_bugs = ', '.join(df_categoria_principal['ID'].astype(str).tolist())
     pdf.chapter_body(f'IDs dos Bugs analisados: {ids_bugs}')
-
-    # Descrição Combinada
-    pdf.chapter_body(f'Descrição combinada: {descricao_categoria}')
 
     # Solução Proposta
     pdf.chapter_body(f'Solução Proposta: {solucao_proposta}')
